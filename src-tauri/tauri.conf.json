@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Non",
+  "version": "0.1.0",
+  "identifier": "app.non.desktop",
+  "build": {
+    "beforeDevCommand": "bun run build:agent && bun run dev:ui",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "bun run build:agent && bun run build:ui",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [
+      {
+        "title": "Non",
+        "width": 1440,
+        "height": 960,
+        "minWidth": 1000,
+        "minHeight": 650,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "transparent": true,
+        "trafficLightPosition": { "x": 18, "y": 24 },
+        "windowEffects": { "effects": ["sidebar"], "state": "followsWindowActiveState" }
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src ipc: http://ipc.localhost; worker-src 'self' blob:; object-src 'none'; frame-src 'none'"
+    }
+  },
+  "bundle": { "active": true, "targets": ["app"], "externalBin": ["binaries/non-agent"] }
+}

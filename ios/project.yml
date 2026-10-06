@@ -1,0 +1,88 @@
+name: Non
+options:
+  bundleIdPrefix: com.jaeho
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: WZ3H5LP87N
+    CODE_SIGN_STYLE: Automatic
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
+targets:
+  Non:
+    type: application
+    platform: iOS
+    sources:
+      - path: Non
+        excludes:
+          - Resources/Web
+      - path: Non/Resources/Web
+        type: folder
+        buildPhase: resources
+    info:
+      path: Non/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: ko
+        CFBundleDisplayName: Non
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: APPL
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSUbiquitousContainers:
+          iCloud.com.jaeho.Non:
+            NSUbiquitousContainerIsDocumentScopePublic: true
+            NSUbiquitousContainerName: Non
+            NSUbiquitousContainerSupportedFolderLevels: Any
+    entitlements:
+      path: Non/Non.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.jaeho.Non
+        com.apple.developer.icloud-services:
+          - CloudDocuments
+        com.apple.developer.ubiquity-container-identifiers:
+          - iCloud.com.jaeho.Non
+        com.apple.developer.ubiquity-kvstore-identifier: $(TeamIdentifierPrefix)com.jaeho.Non
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jaeho.Non
+        PRODUCT_NAME: Non
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+    preBuildScripts:
+      - name: Bundle React workspace
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          cd "$SRCROOT/.."
+          bun run build:ui
+          mkdir -p "$SRCROOT/Non/Resources/Web"
+          rsync -a --delete --exclude .keep "$SRCROOT/../dist/" "$SRCROOT/Non/Resources/Web/"
+schemes:
+  Non:
+    build:
+      targets:
+        Non: all
+    run:
+      config: Debug
+    archive:
+      config: Release

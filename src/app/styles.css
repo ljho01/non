@@ -1,0 +1,687 @@
+@import 'tailwindcss' source(none);
+@source '../';
+@source '../../index.html';
+@custom-variant dark (&:is(.dark *));
+@theme inline {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-sidebar: var(--sidebar);
+  --color-workspace-surface: var(--workspace-surface);
+  --color-pdf: var(--pdf);
+  --color-chat-user: var(--primary);
+  --color-chat-user-foreground: var(--primary-foreground);
+  --color-chat-dot: var(--chat-dot);
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+}
+:root {
+  --font-native-ios: 'Apple SD Gothic Neo', system-ui, sans-serif;
+  --background: #ffffff;
+  --foreground: #171717;
+  --muted: #f4f4f4;
+  --muted-foreground: #737373;
+  --primary: #171717;
+  --primary-foreground: #ffffff;
+  --secondary: #eeeeee;
+  --popover: #ffffff;
+  --accent: #0000000a;
+  --border: #00000014;
+  --ring: #8b8b8b;
+  --destructive: #b74343;
+  --sidebar: #f5f5f552;
+  --workspace-surface: #ffffff;
+  --pdf: #ededed;
+  --chat-dot: #8e8e93;
+  --app-header-height: 44px;
+  --right-sidebar-toggle-gutter: 38px;
+  --type-document-title-size: 2.25rem;
+  --type-document-heading-1-size: 1.875rem;
+  --type-document-heading-2-size: 1.5rem;
+  --type-document-heading-3-size: 1.25rem;
+  --type-document-heading-4-size: 1.125rem;
+  --type-document-heading-5-size: 1rem;
+  --type-document-heading-6-size: 0.8125rem;
+  --type-code-block-size: 0.85em;
+  --type-code-inline-size: 0.88em;
+  --type-compact-size: 0.9em;
+  --type-leading-tight: 1.25;
+  --type-leading-input: 1.7;
+  --type-leading-native-ios-body: 1.75;
+  --type-tracking-heading: -0.02em;
+  --type-tracking-display: -0.035em;
+}
+.dark {
+  --background: #212121;
+  --foreground: #ececec;
+  --muted: #2f2f2f;
+  --muted-foreground: #a0a0a0;
+  --primary: #ececec;
+  --primary-foreground: #171717;
+  --secondary: #303030;
+  --popover: #2a2a2a;
+  --accent: #ffffff0c;
+  --border: #ffffff17;
+  --ring: #808080;
+  --destructive: #f38f8f;
+  --sidebar: #17171748;
+  --workspace-surface: #1b1b1b;
+  --pdf: #171717;
+  --chat-dot: #6e6e73;
+}
+* {
+  box-sizing: border-box;
+  border-color: var(--border);
+}
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: transparent;
+  font-size: var(--text-sm);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The native iOS shell owns navigation chrome; the WebView keeps the existing
+   document language while presenting one workspace pane at a time. */
+html[data-native-ios] {
+  --app-header-height: 0px;
+}
+html[data-native-ios] body {
+  font-family: var(--font-native-ios);
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+}
+html[data-native-ios] input,
+html[data-native-ios] textarea,
+html[data-native-ios] [contenteditable='true'] {
+  -webkit-user-select: text;
+}
+html[data-native-ios] [data-workspace-layout] {
+  isolation: isolate;
+}
+html[data-native-ios] [data-sidebar-shell],
+html[data-native-ios] [data-assistant-sidebar] {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  width: 100% !important;
+  background: var(--background);
+}
+html[data-native-ios] [data-sidebar-shell][aria-hidden='true'],
+html[data-native-ios] [data-assistant-sidebar][aria-hidden='true'] {
+  visibility: hidden;
+}
+html[data-native-ios] [data-sidebar-shell] > aside,
+html[data-native-ios] [data-assistant-sidebar] > div {
+  width: 100% !important;
+  max-width: none;
+}
+html[data-native-ios] [data-sidebar-shell] > aside {
+  background: var(--background);
+  border-right: 0;
+}
+html[data-native-ios] [data-sidebar-spacer],
+html[data-native-ios] [data-desktop-chrome],
+html[data-native-ios] [data-document-tabbar],
+html[data-native-ios] .sidebar-resizer,
+html[data-native-ios] .assistant-resizer {
+  display: none;
+}
+html[data-native-ios] [data-document-main] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+}
+html[data-native-ios] [data-document-main] article {
+  padding-right: 22px;
+  padding-left: 22px;
+  padding-top: 24px;
+  font-size: var(--text-base);
+  line-height: var(--type-leading-native-ios-body);
+}
+html[data-native-ios] [data-document-main] input[aria-label='노트 제목'] {
+  font-size: var(--type-document-heading-1-size);
+}
+html[data-native-ios] [data-assistant-sidebar] > div {
+  position: absolute;
+  inset: 0;
+}
+html[data-native-ios] kbd {
+  display: none;
+}
+@layer base {
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+button {
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+}
+[data-window-drag-region] {
+  -webkit-app-region: drag;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+::selection {
+  background: #8c8c8c55;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted-foreground) 25%, transparent);
+  border-radius: 8px;
+}
+.sidebar-resizer,
+.assistant-resizer {
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: col-resize;
+  touch-action: none;
+}
+.sidebar-resizer {
+  right: -5px;
+}
+.assistant-resizer {
+  left: -5px;
+}
+.sidebar-resizer::after,
+.assistant-resizer::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 4px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--foreground) 12%, transparent) 22%,
+    color-mix(in srgb, var(--foreground) 62%, transparent) 50%,
+    color-mix(in srgb, var(--foreground) 12%, transparent) 78%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 130ms ease;
+}
+.assistant-resizer::after {
+  right: 4px;
+  left: auto;
+}
+.sidebar-resizer::after {
+  left: 5px;
+}
+.sidebar-resizer:hover::after,
+.sidebar-resizer:focus-visible::after,
+.sidebar-resizing .sidebar-resizer::after,
+.assistant-resizer:hover::after,
+.assistant-resizer:focus-visible::after,
+.assistant-resizing .assistant-resizer::after {
+  opacity: 1;
+}
+.sidebar-resizer:focus-visible,
+.assistant-resizer:focus-visible {
+  outline: none;
+}
+.sidebar-resizing,
+.sidebar-resizing *,
+.assistant-resizing,
+.assistant-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+kbd {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--muted-foreground);
+}
+.document-panel.has-note-cover:before {
+  content: '';
+  z-index: -1;
+  background: var(--note-cover-background);
+  pointer-events: none;
+  height: 220px;
+  transform: translate3d(0, calc(-1 * var(--note-cover-scroll, 0px)), 0);
+  will-change: transform;
+  position: absolute;
+  inset: 0 0 auto;
+}
+[data-note-cover='fog'] {
+  --note-cover-background: linear-gradient(135deg, #aeb8bd, #d6dad8 58%, #9ca7ad);
+}
+[data-note-cover='sea'] {
+  --note-cover-background: linear-gradient(135deg, #456a7c, #82a5ad 55%, #b9c4bc);
+}
+[data-note-cover='moss'] {
+  --note-cover-background: linear-gradient(135deg, #4f5d43, #879174 54%, #c3b79b);
+}
+[data-note-cover='dusk'] {
+  --note-cover-background: linear-gradient(135deg, #5c536e, #a0808b 55%, #d2a785);
+}
+[data-note-cover='clay'] {
+  --note-cover-background: linear-gradient(135deg, #875f50, #bc8871 52%, #d5b99d);
+}
+[data-note-cover='ink'] {
+  --note-cover-background: linear-gradient(135deg, #20262b, #44515a 60%, #69747a);
+}
+.document-panel.has-note-cover:not([data-cover-past]) .document-tab,
+.document-panel.has-note-cover:not([data-cover-past]) .tab-add {
+  background: var(--background);
+}
+.document-panel.has-note-cover:not([data-cover-past]) .document-tab,
+.document-panel.has-note-cover:not([data-cover-past]) .tab-add {
+  background: color-mix(in srgb, var(--background) 58%, transparent);
+}
+.document-panel.has-note-cover:not([data-cover-past]) .document-tab,
+.document-panel.has-note-cover:not([data-cover-past]) .tab-add {
+  color: var(--foreground);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+  backdrop-filter: blur(14px) saturate(125%);
+  box-shadow: inset 0 0 0 1px #ffffff1f;
+}
+.document-panel.has-note-cover:not([data-cover-past]) .document-tab.selected {
+  background: var(--background);
+}
+.document-panel.has-note-cover:not([data-cover-past]) .document-tab.selected {
+  background: color-mix(in srgb, var(--background) 76%, transparent);
+}
+.document-tab-close {
+  opacity: 0;
+  pointer-events: none;
+}
+.document-tab:hover .document-tab-close,
+.document-tab:focus-within .document-tab-close,
+.document-tab[data-document-tab-active] .document-tab-close {
+  opacity: 0.72;
+  pointer-events: auto;
+}
+.document-tab .document-tab-close:hover {
+  opacity: 1;
+}
+.document-tab:hover .document-tab-handle,
+.document-tab:focus-within .document-tab-handle,
+.document-tab[data-document-tab-active] .document-tab-handle {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 38px),
+    transparent calc(100% - 22px)
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 38px),
+    transparent calc(100% - 22px)
+  );
+}
+.tiptap-note [data-placeholder].is-empty:before,
+.markdown-source[data-placeholder].is-empty:before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--muted-foreground);
+  pointer-events: none;
+  opacity: 0.58;
+}
+/* React embed widgets own their typography; these rules style ProseMirror document nodes only. */
+.tiptap-note p:not(.base-embed-preview *) {
+  margin: 0.7em 0;
+}
+.tiptap-note h1:not(.base-embed-preview *),
+.tiptap-note h2:not(.base-embed-preview *),
+.tiptap-note h3:not(.base-embed-preview *),
+.tiptap-note h4:not(.base-embed-preview *),
+.tiptap-note h5:not(.base-embed-preview *),
+.tiptap-note h6:not(.base-embed-preview *) {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--type-leading-tight);
+}
+.tiptap-note h1:not(.base-embed-preview *),
+.tiptap-note h2:not(.base-embed-preview *),
+.tiptap-note h3:not(.base-embed-preview *) {
+  font-weight: var(--font-weight-bold);
+}
+.tiptap-note h1:not(.base-embed-preview *) {
+  font-size: var(--type-document-heading-1-size);
+  margin: 1.4em 0 0.5em;
+}
+.tiptap-note h2:not(.base-embed-preview *) {
+  font-size: var(--type-document-heading-2-size);
+  margin: 1.3em 0 0.5em;
+}
+.tiptap-note h3:not(.base-embed-preview *) {
+  font-size: var(--type-document-heading-3-size);
+  margin: 1.2em 0 0.5em;
+}
+.tiptap-note h4:not(.base-embed-preview *) {
+  font-size: var(--type-document-heading-4-size);
+  margin: 1.15em 0 0.45em;
+}
+.tiptap-note h5:not(.base-embed-preview *) {
+  font-size: var(--type-document-heading-5-size);
+  margin: 1.1em 0 0.4em;
+}
+.tiptap-note h6:not(.base-embed-preview *) {
+  font-size: var(--type-document-heading-6-size);
+  margin: 1em 0 0.35em;
+}
+.tiptap-note ul:not(.base-embed-preview *),
+.tiptap-note ol:not(.base-embed-preview *) {
+  margin: 0.8em 0;
+  padding-left: 1.5em;
+}
+.tiptap-note ul:not(.base-embed-preview *) {
+  list-style: outside;
+}
+.tiptap-note ol:not(.base-embed-preview *) {
+  list-style: decimal;
+}
+.tiptap-note ul:not(.base-embed-preview *)[data-type='taskList'] {
+  padding: 0;
+  list-style: none;
+}
+.tiptap-note ul:not(.base-embed-preview *)[data-type='taskList'] > li {
+  display: grid;
+  grid-template-columns: 1.25em minmax(0, 1fr);
+  align-items: start;
+  column-gap: 8px;
+}
+.tiptap-note ul:not(.base-embed-preview *)[data-type='taskList'] > li > label {
+  grid-row: 1;
+  grid-column: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 1lh;
+  display: flex;
+}
+.tiptap-note ul:not(.base-embed-preview *)[data-type='taskList'] > li > div {
+  grid-row: 1;
+  grid-column: 2;
+  cursor: text;
+  min-width: 0;
+  min-height: 1lh;
+}
+.tiptap-note ul:not(.base-embed-preview *)[data-type='taskList'] > li > div > p {
+  min-height: 1lh;
+  margin: 0;
+}
+.tiptap-note blockquote:not(.base-embed-preview *) {
+  border-left: 3px solid var(--ring);
+  color: var(--muted-foreground);
+  margin: 1.2em 0;
+  padding-left: 1em;
+}
+.tiptap-note pre:not(.base-embed-preview *) {
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-code-block-size);
+  line-height: var(--type-leading-input);
+  white-space: pre-wrap;
+  border-radius: 8px;
+  padding: 16px;
+}
+.tiptap-note code:not(.base-embed-preview *) {
+  font-family: var(--font-mono);
+  font-size: var(--type-compact-size);
+  background: var(--muted);
+  border-radius: 3px;
+}
+.tiptap-note hr:not(.base-embed-preview *) {
+  border-top: 1px solid var(--border);
+  margin: 1.8em 0;
+}
+.tiptap-note .ProseMirror-selectednode {
+  outline: 2px solid var(--ring);
+}
+.chat-tiptap-input p.is-editor-empty:first-child:before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--muted-foreground);
+  pointer-events: none;
+  height: 0;
+}
+.chat-tiptap-input[contenteditable='false'] {
+  cursor: default;
+  opacity: 0.55;
+}
+.markdown {
+  overflow-wrap: anywhere;
+}
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--type-leading-tight);
+}
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  font-weight: var(--font-weight-bold);
+}
+.markdown h1 {
+  font-size: var(--type-document-heading-1-size);
+  letter-spacing: var(--type-tracking-display);
+  margin: 0 0 1em;
+}
+.markdown h2 {
+  font-size: var(--type-document-heading-2-size);
+  letter-spacing: var(--type-tracking-heading);
+  margin: 1.8em 0 0.7em;
+}
+.markdown h3 {
+  font-size: var(--type-document-heading-3-size);
+  margin: 1.5em 0 0.6em;
+}
+.markdown h4 {
+  font-size: var(--type-document-heading-4-size);
+  margin: 1.35em 0 0.55em;
+}
+.markdown h5 {
+  font-size: var(--type-document-heading-5-size);
+  margin: 1.25em 0 0.5em;
+}
+.markdown h6 {
+  font-size: var(--type-document-heading-6-size);
+  margin: 1.15em 0 0.45em;
+}
+.markdown p {
+  margin: 0.85em 0;
+}
+.markdown ul,
+.markdown ol {
+  margin: 0.8em 0;
+  padding-left: 1.5em;
+}
+.markdown ul {
+  list-style: outside;
+}
+.markdown ol {
+  list-style: decimal;
+}
+.markdown li {
+  margin: 0.35em 0;
+}
+.markdown blockquote {
+  border-left: 3px solid var(--ring);
+  color: var(--muted-foreground);
+  margin: 1.5em 0;
+  padding: 0 1em;
+}
+.markdown pre {
+  background: var(--muted);
+  font-size: var(--type-code-block-size);
+  border-radius: 7px;
+  padding: 1em;
+  overflow: auto;
+}
+.markdown code {
+  font-family: var(--font-mono);
+  font-size: var(--type-code-inline-size);
+}
+.markdown :not(pre) > code {
+  background: var(--muted);
+  border-radius: 3px;
+  padding: 0.15em 0.3em;
+}
+.markdown a {
+  color: var(--foreground);
+  text-underline-offset: 3px;
+  text-decoration: underline;
+}
+.markdown hr {
+  border-top: 1px solid var(--border);
+  margin: 2em 0;
+}
+.markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--type-compact-size);
+  margin: 1em 0;
+}
+.markdown th,
+.markdown td {
+  border: 1px solid var(--border);
+  text-align: left;
+  padding: 0.4em 0.6em;
+}
+
+/* iMessage-style chat bubbles. Tails and pop-in need pseudo-elements/keyframes,
+   so they live here; layout and colors stay Tailwind/token driven. Peer
+   replies render as plain text, so the tail only exists on the user side. */
+.chat-bubble[data-anim],
+.chat-plain[data-anim] {
+  animation: chat-bubble-pop 0.28s cubic-bezier(0.22, 0.7, 0.32, 1) both;
+  transform-origin: left bottom;
+}
+.chat-bubble.chat-user[data-anim] {
+  transform-origin: right bottom;
+}
+@keyframes chat-bubble-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.chat-bubble[data-tail]::before,
+.chat-bubble[data-tail]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+}
+.chat-bubble[data-tail]::before {
+  background: inherit;
+  width: 20px;
+}
+.chat-bubble[data-tail]::after {
+  background: var(--workspace-surface);
+  width: 26px;
+}
+.chat-bubble.chat-user[data-tail]::before {
+  right: -8px;
+  border-bottom-right-radius: 16px;
+}
+.chat-bubble.chat-user[data-tail]::after {
+  right: -26px;
+  border-bottom-left-radius: 16px;
+}
+/* Bubble padding makes default document margins feel cramped. */
+.chat-bubble .markdown > :first-child,
+.chat-plain .markdown > :first-child {
+  margin-top: 0;
+}
+.chat-bubble .markdown > :last-child,
+.chat-plain .markdown > :last-child {
+  margin-bottom: 0;
+}
+.chat-bubble .markdown p {
+  margin: 0.45em 0;
+}
+.chat-bubble.chat-user .markdown a {
+  color: inherit;
+}
+.chat-bubble.chat-user .markdown :not(pre) > code {
+  background: color-mix(in srgb, var(--chat-user-foreground) 18%, transparent);
+}
+.chat-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 2px;
+}
+.chat-typing > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--chat-dot);
+  animation: chat-typing-bounce 1.35s ease-in-out infinite;
+}
+.chat-typing > span:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.chat-typing > span:nth-child(3) {
+  animation-delay: 0.32s;
+}
+@keyframes chat-typing-bounce {
+  0%,
+  55%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

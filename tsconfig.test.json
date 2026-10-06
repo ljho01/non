@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "types": ["bun", "vite/client"] },
+  "include": ["src/**/__test__/**/*.ts", "src/hugeicons.d.ts"],
+  "exclude": []
+}

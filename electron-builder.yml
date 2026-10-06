@@ -1,0 +1,30 @@
+appId: app.non.desktop
+productName: Non
+asar: true
+directories:
+  output: release
+  buildResources: src-tauri/icons
+files:
+  - dist/**/*
+  - dist-electron/main.cjs
+  - dist-electron/main.cjs.map
+  - dist-electron/preload.cjs
+  - dist-electron/preload.cjs.map
+  - package.json
+extraResources:
+  - from: dist-electron/agent.cjs
+    to: agent.cjs
+  - from: dist-electron/agent.cjs.map
+    to: agent.cjs.map
+mac:
+  target:
+    - target: dir
+      arch:
+        - arm64
+  category: public.app-category.productivity
+  icon: icon.icns
+  identity: null
+  darkModeSupport: true
+  extendInfo:
+    NSMicrophoneUsageDescription: Non은 사용자가 시작한 실시간 로컬 전사를 위해 마이크를 사용합니다.
+npmRebuild: false
