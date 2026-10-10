@@ -224,3 +224,7 @@ Markdown의 `![[이름.base#뷰]]`와 fenced `base` 블록은 미리보기 안�
 플러그인·지도 뷰는 범위에서 제외합니다. Obsidian 실행 파일과의 모든 동작에 대한 1:1 차등 검증은 하지 않았습니다. 본문 링크·태그 수집은 Non의 파서이며 Obsidian의 모든 Markdown 구문과 동일하다고 보장하지 않습니다. 수식·YAML의 알 수 없는 확장 설정은 보존합니다. JSON 노트의 `metadata.properties`와 `.base`의 추가 뷰 설정은 Non 확장입니다. 기본 제한은 20,000개 파일/24단계 폴더, 병렬 읽기 6개, 텍스트 64MB, 파일 읽기 8초, 로컬 이미지 8MB입니다.
 
 개발 예제는 `bun run dev:web`의 `/scripts/preview-index.html?bases`에서 사용할 수 있습니다. 테스트는 YAML 및 Markdown 원문 보존, JSON 확장 필드, 안전한 수식 평가, 필터/정렬/요약, 네이티브 파일 생명주기와 동시 저장 충돌을 포함합니다.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

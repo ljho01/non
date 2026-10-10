@@ -46,6 +46,9 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
 import { MarkdownEditor } from './markdown-editor'
+import { NoteProperties } from './note-properties'
+import { propertyDraft } from '../model/property-value'
+import { propertyObject, readProperties, writeProperty } from '@/shared/contracts/properties'
 import {
   editorExtensions,
   editorToNote,
@@ -317,9 +320,11 @@ function RichNote({ note, path, renderBase }: { note: Note; path: string; render
     if (!editor || content === lastContent.current) return
     // External reload: replace without emitting an edit or allowing undo to restore stale disk data.
     const next = replaceEditorDocument(noteToEditor(note), editor.schema)
-    editor.view.updateState(
-      EditorState.create({ schema: editor.schema, plugins: editor.state.plugins, doc: next }),
-    )
+    if (!editor.state.doc.eq(next)) {
+      editor.view.updateState(
+        EditorState.create({ schema: editor.schema, plugins: editor.state.plugins, doc: next }),
+      )
+    }
     editor.commands.setMeta('nonExternal', true)
     lastContent.current = content
   }, [editor, note])
@@ -527,6 +532,17 @@ function RichNote({ note, path, renderBase }: { note: Note; path: string; render
           }}
         />
       </div>
+      <NoteProperties
+        properties={propertyObject(note.metadata?.properties)}
+        onChange={(name, value, previous) => {
+          const latest = useVault.getState().tabs.find((tab) => tab.path === path)?.content ?? serializeNote(current.current)
+          if (propertyDraft(readProperties(path, latest)[name]) !== propertyDraft(previous))
+            throw new Error('속성이 다른 곳에서 변경되었습니다. 다시 편집하세요.')
+          const next = writeProperty(path, latest, name, value)
+          current.current = parseNote(next)
+          useVault.getState().edit(path, next)
+        }}
+      />
       <EditorContent editor={editor} />
       {slashMenu && (
         <div
@@ -710,7 +726,7 @@ export function NoteEditor({ document: doc, renderBase }: { document: OpenDocume
           )}
         >
           {doc.kind === 'legacy' ? (
-            <MarkdownEditor path={doc.path} content={doc.content} renderBase={renderBase} />
+            <MarkdownEditor key={doc.path} path={doc.path} content={doc.content} renderBase={renderBase} />
           ) : parsed.note ? (
             <RichNote key={doc.path} note={parsed.note} path={doc.path} renderBase={renderBase} />
           ) : (

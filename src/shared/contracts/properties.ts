@@ -18,6 +18,12 @@ function frontmatter(source: string) {
   const end = start + closing.index
   return { start, end, body: source.slice(end + closing[0].length), closing: closing[0] }
 }
+// Keep the prefix byte-for-byte when editing the Markdown body separately.
+export function markdownPropertyParts(source: string) {
+  const parts = frontmatter(source)
+  if (!parts) return { prefix: '', body: source }
+  return { prefix: source.slice(0, source.length - parts.body.length), body: parts.body }
+}
 export function readProperties(path: string, source: string): Properties {
   if (path.toLowerCase().endsWith('.json'))
     return propertyObject(parseNote(source).metadata?.properties)
